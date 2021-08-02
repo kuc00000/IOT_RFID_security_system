@@ -41,3 +41,5 @@ def delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return delete_collection(coll_ref, batch_size)
+    ##사용 예시 : delete_collection(db.collection('users'),10)
+    ##collection 자체의 크기가 클수록 batch_size를 크게 하면 전체 삭제 가능

@@ -175,3 +175,11 @@ def delete_field(coll_name,doc_name,field_name):
 def delete_document(coll_name,doc_name):
     db.collection(coll_name).document(doc_name).delete()
 
+'''    
+docs = db.collection(u'User').where(u'user_id', u'>',100).stream()
+
+for doc in docs:
+    print(f'{doc.id} => {doc.to_dict()}')
+위 코드는 user_id 값이 100보다 큰 모든 문서들을 User 테이블에서 찾아서 리턴한 다음
+그 문서들의 모든 정보를 출력하는 코드이다.
+'''

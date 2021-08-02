@@ -29,9 +29,10 @@ def delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return delete_collection(coll_ref, batch_size)
-    ##사용 예시 : delete_collection(db.collection('users'),10)
-    ##collection 자체의 크기가 클수록 batch_size를 크게 하면 전체 삭제 가능
+    #사용 예시 : delete_collection(db.collection('users'),10)
+    #collection 자체의 문서가 많을수록 batch_size를 크게 하면 콜렉션의 전체 문서들을 삭제할 수 있다.
 
+#장비 정보를 담는 클래스, material 정보를 db로부터 쉽게 가져오고 업데이트 하기 위해 만들어진 클래스이다.
 class Material(object):
     def __init__(self, user_id, due_date, export_date, security_level=0):
         self.user_id = user_id
@@ -52,7 +53,7 @@ class Material(object):
                 security_level={self.security_level}, \
             )'
         )
-
+#유저 정보를 담는 클래스, 유저 정보를 db로부터 쉽게 가져오고 업데이트 하기 위해 만들어진 클래스이다.
 class User(object):
     def __init__(self, entry_time, exit_time, user_name, password='0000'):
         self.entry_time = entry_time
@@ -110,16 +111,16 @@ user = User(entry_time='12345', exit_time=today,
 db.collection('User').add(user.to_dict())
 '''
 
+#
 def get_doc(coll_name,doc_name):
     return db.collection(coll_name).document(doc_name)
 
-
+''' 이 메서드는 특정 document의 필드 값을 바꾸려고 할 때 사용하는 매서드이다.
+'''
 def update_doc(coll_name,doc_name,field_name,value):
     doc_ref = db.collection(coll_name).document(doc_name)
     doc_ref.update({field_name:value})
-''' 위 메서드는 coll_name의 collection(테이블)에 doc_name의 이름(primary key)
-을 갖는 document에 field_name의 속성을 value라는 값으로 변경할 때 사용한다.
-'''
+
 
 
 
@@ -147,7 +148,7 @@ batch는 commit 메서드를 호출하기 전까지 위와 같이 set,update,del
 지정 가능하다.
 '''
 
-
+#하나의 문서의 모든 정보를 출력한다.
 def print_doc_data(coll_name,doc_name):
     doc_ref = db.collection(coll_name).document(doc_name)
     doc = doc_ref.get()
@@ -156,13 +157,13 @@ def print_doc_data(coll_name,doc_name):
     else:
         print(u'No such document!')
 
-#coll_name에 해당하는 컬렉션의 모든 문서의 정보를 출력한다.
+#하나의 컬렉션의 모든 문서에 대한 정보들을 출력한다.
 def print_all_doc(coll_name):
     docs = db.collection(coll_name).stream()
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
 
-#field_name에 해당하는 속성을 document에서 삭제        
+#문서에서 특성 속성을 제거할 때 사용한다.
 def delete_field(coll_name,doc_name,field_name):
     doc_ref = db.collection(coll_name).document(doc_name)
     city_ref.update({

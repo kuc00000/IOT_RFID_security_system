@@ -11,13 +11,15 @@ db = firestore.client()
 ##user라는 collection에 document를 추가하는 코드, 아래 부분은 필드명
 def create_doc_user(coll_id,doc_id):
     doc_ref = db.collection(coll_id).document(doc_id)
-    doc_ref.set({
+    return doc_ref
+##이 부분은 필드명 자유롭게 편집 가능
+doc_ref.set({
         'entry_time': 'none',
         'exit_time': 'none',
         'password': 'ddkxz5792',
         'user_name': 'Scout'
-    })
-
+})
+##현재 시간을 가져오려면 datetime.datetime.now() 함수로 구현 가능
 
 ##material table에 document를 추가하는 코드
 def create_doc_material(coll_id,doc_id):

@@ -27,7 +27,7 @@ def create_doc_material(coll_id,doc_id):
     doc_ref.set({
         'due_date': 'none',
         'export_time': 'none',
-        'security_level': 1,
+        'security_level': {'Radio comms':1},
         'user_id': ''
     })
 

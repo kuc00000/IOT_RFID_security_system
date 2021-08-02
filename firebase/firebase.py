@@ -27,7 +27,7 @@ def create_doc_material(coll_id,doc_id):
     doc_ref.set({
         'due_date': 'none',
         'export_time': 'none',
-        'security_level': {'Radio comms':1},
+        'security_level': {'Radio comms':1}, #map type의 경우 다음과 같이 작성
         'user_id': ''
     })
 

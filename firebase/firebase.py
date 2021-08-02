@@ -2,6 +2,14 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+
+'''
+Firebase db 구성
+User 테이블 속성: entry_time(출근시간), exit_time(퇴근시간),password(비밀번호),user_name(사용자이름)
+Material 테이블 속성 : due_date(반납기한), export_time(빌리기 시작한 시간), security_level(보안레벨),
+user_id(빌린 유저의 id)
+'''
+
 # Use a service account
 #auth.json 파일이 현재 .py 파일의 위치에 존재해야 한다.
 

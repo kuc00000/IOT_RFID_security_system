@@ -17,15 +17,6 @@ def find_doc(coll_name, doc_name):
         return False
 
 
-def update_doc(coll_name, doc_name, field_name, value):
-    doc_ref = db.collection(coll_name).document(doc_name)
-    doc = doc_ref.get()
-    if doc.exists:
-        doc_ref.update({field_name: value})
-    else:
-        print("Error")
-
-
 def delete_doc(coll_name, doc_name):
     doc_ref = db.collection(coll_name).document(doc_name)
     doc = doc_ref.get()
@@ -45,11 +36,28 @@ def register_user(_user_id, _user_name, _password, _entry_time, _exit_time):
     doc_ref.set({'user_name': _user_name, 'password': _password, 'entry_time': _entry_time, 'exit_time': _exit_time})
 
 
-def get_due_date(material_id):
-    doc_ref = db.collection("Material").document(material_id)
+def get_field(coll_name, doc_name, field_name):
+    doc_ref = db.collection(coll_name).document(doc_name)
     doc = doc_ref.get()
     if doc.exists:
-        return doc_ref.get({"due_date"})
+        return doc.get(field_name)
     else:
         return False
+
+
+def set_field(coll_name, doc_name, field_name, value):
+    doc_ref = db.collection(coll_name).document(doc_name)
+    doc = doc_ref.get()
+    if doc.exists:
+        doc_ref.update({field_name: value})
+    else:
+        print("Error")
+
+
+def find_doc_with_np(user_name, password):
+    docs = db.collection("User").stream()
+    for doc in docs:
+        if doc.get(user_name) == user_name and doc.get(password) == password:
+            return doc
+    return False
 

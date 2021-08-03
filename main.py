@@ -1,5 +1,8 @@
+from firebase import firebase as f
+from hash import hash as h
 import sys
 import msvcrt
+import datetime
 
 
 def get_secret() -> str:
@@ -41,7 +44,7 @@ while True:
             print("1 : Check the security level")
             print("2 : Registration")
             print("3 : Access control mode")
-            print("4 : Deletion")
+            print("4 : Return")
             print("0 : Exit")
             n = input("Input = ")
             if n == "0":
@@ -51,20 +54,34 @@ while True:
                 print("Security level = " + str((int(uid) % 4 + 1)))
             elif n == "2":
                 uid = get_secret()
-                # check if uid is already saved in DB
-                # if not, register uid with hashing
+                if f.find_doc("Material", uid):
+                    print("Error - uid already exists in DB.")
+                    continue
+                t = input("User_id = ")
+                f.register_material(uid, t,  datetime.datetime.now() + datetime.timedelta(7, 0, 0, 0), int(uid) % 4 + 1)
+                print("Success to register.")
             elif n == "3":
                 uid = get_secret()
-                # check if uid is already saved in DB
-                # if not, print warning message
-                # check due_date and print message
+                if f.find_doc("Material", uid):
+                    print("Pass")
+                else:
+                    print("Warning - uid doesn't exist in DB.")
+                    continue
+                due = f.get_due_date(uid)
+                if datetime.datetime.now() >= due:
+                    print("Warning - due date was over, please return it.")
             elif n == "4":
                 uid = get_secret()
-                # check if uid is already saved in DB
-                # if not, print error message
-                # delete uid from DB, and print due_date, export_time
+                if f.find_doc("Material", uid):
+                    due = f.get_due_date(uid)
+                    f.delete_doc("Material", uid)
+                    print("Success to return.")
+                    print("Due date : " + str(due))
+                    print("Export time : " + str(datetime.datetime.now()))
+                else:
+                    print("Error - uid doesn't exist in DB.")
             else:
-                print("Unexpected input " + n + ". Try again.")
+                print("Unexpected input - " + n + ". Try again.")
     elif n == "2":
         while True:
             print("1 : Card registration")

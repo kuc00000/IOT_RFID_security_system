@@ -132,8 +132,8 @@ while True:
                 if not doc:
                     print("Error - corresponding information doesn't exist.")
                 else:
-                    doc.delete()
-                print("Success to delete information.")
+                    f.delete_doc("User", doc)
+                    print("Success to delete information.")
             elif n == "4":
                 uid = get_secret()
                 if f.find_doc("User", uid):

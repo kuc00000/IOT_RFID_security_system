@@ -57,7 +57,8 @@ def set_field(coll_name, doc_name, field_name, value):
 def find_doc_with_np(user_name, password):
     docs = db.collection("User").stream()
     for doc in docs:
-        if doc.get(user_name) == user_name and doc.get(password) == password:
-            return doc
+        if doc.exists:
+            if doc.get("user_name") == user_name and doc.get("password") == password:
+                return doc.id
     return False
 

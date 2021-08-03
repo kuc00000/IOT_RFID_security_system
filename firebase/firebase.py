@@ -2,14 +2,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-
-'''
-Firebase db 구성
-User 테이블 속성: entry_time(출근시간), exit_time(퇴근시간),password(비밀번호),user_name(사용자이름)
-Material 테이블 속성 : due_date(반납기한), export_time(빌리기 시작한 시간), security_level(보안레벨),
-user_id(빌린 유저의 id)
-'''
-
 # Use a service account
 #auth.json 파일이 현재 .py 파일의 위치에 존재해야 한다.
 
@@ -37,10 +29,9 @@ def delete_collection(coll_ref, batch_size):
 
     if deleted >= batch_size:
         return delete_collection(coll_ref, batch_size)
-    #사용 예시 : delete_collection(db.collection('users'),10)
-    #collection 자체의 문서가 많을수록 batch_size를 크게 하면 콜렉션의 전체 문서들을 삭제할 수 있다.
+    ##사용 예시 : delete_collection(db.collection('users'),10)
+    ##collection 자체의 크기가 클수록 batch_size를 크게 하면 전체 삭제 가능
 
-#장비 정보를 담는 클래스, material 정보를 db로부터 쉽게 가져오고 업데이트 하기 위해 만들어진 클래스이다.
 class Material(object):
     def __init__(self, user_id, due_date, export_date, security_level=0):
         self.user_id = user_id
@@ -61,7 +52,7 @@ class Material(object):
                 security_level={self.security_level}, \
             )'
         )
-#유저 정보를 담는 클래스, 유저 정보를 db로부터 쉽게 가져오고 업데이트 하기 위해 만들어진 클래스이다.
+
 class User(object):
     def __init__(self, entry_time, exit_time, user_name, password='0000'):
         self.entry_time = entry_time
@@ -82,9 +73,6 @@ class User(object):
                 security_level={self.security_level}, \
             )'
         )
-
-
-
 
 '''
 doc_ref = create_doc('Material','12345678')
@@ -119,16 +107,16 @@ user = User(entry_time='12345', exit_time=today,
 db.collection('User').add(user.to_dict())
 '''
 
-#
 def get_doc(coll_name,doc_name):
     return db.collection(coll_name).document(doc_name)
 
-''' 이 메서드는 특정 document의 필드 값을 바꾸려고 할 때 사용하는 매서드이다.
-'''
+
 def update_doc(coll_name,doc_name,field_name,value):
     doc_ref = db.collection(coll_name).document(doc_name)
     doc_ref.update({field_name:value})
-
+''' 위 메서드는 coll_name의 collection(테이블)에 doc_name의 이름(primary key)
+을 갖는 document에 field_name의 속성을 value라는 값으로 변경할 때 사용한다.
+'''
 
 
 
@@ -156,7 +144,7 @@ batch는 commit 메서드를 호출하기 전까지 위와 같이 set,update,del
 지정 가능하다.
 '''
 
-#하나의 문서의 모든 정보를 출력한다.
+
 def print_doc_data(coll_name,doc_name):
     doc_ref = db.collection(coll_name).document(doc_name)
     doc = doc_ref.get()
@@ -165,13 +153,13 @@ def print_doc_data(coll_name,doc_name):
     else:
         print(u'No such document!')
 
-#하나의 컬렉션의 모든 문서에 대한 정보들을 출력한다.
+#coll_name에 해당하는 컬렉션의 모든 문서의 정보를 출력한다.
 def print_all_doc(coll_name):
     docs = db.collection(coll_name).stream()
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
 
-#문서에서 특성 속성을 제거할 때 사용한다.
+#field_name에 해당하는 속성을 document에서 삭제        
 def delete_field(coll_name,doc_name,field_name):
     doc_ref = db.collection(coll_name).document(doc_name)
     city_ref.update({
@@ -183,11 +171,23 @@ def delete_field(coll_name,doc_name,field_name):
 def delete_document(coll_name,doc_name):
     db.collection(coll_name).document(doc_name).delete()
 
-'''    
-docs = db.collection(u'User').where(u'user_id', u'>',100).stream()
-
-for doc in docs:
-    print(f'{doc.id} => {doc.to_dict()}')
-위 코드는 user_id 값이 100보다 큰 모든 문서들을 User 테이블에서 찾아서 리턴한 다음
-그 문서들의 모든 정보를 출력하는 코드이다.
+#Material 및 User에 새로운 문서를 등록하는 함수
+import datetime
+def register_material(material_id,_user_id,_due_date,_export_date,_security_level,_salt):
+    doc_ref = create_doc('Material',material_id)
+    material = Material(user_id=_user_id, due_date=_due_date, 
+                    export_date =_export_date,salt=_salt,security_level=_security_level)
+    doc_ref.set(material.to_dict())
+def register_user(_user_id,_user_name,_password,_entry_time,_exit_time,_salt):
+    doc_ref = create_doc('User',_user_id)
+    user = User(entry_time=_entry_time, exit_time=_exit_time, 
+                user_name =_user_name,salt =_salt, password=_password)
+    doc_ref.set(user.to_dict())
+    
+'''
+위 register함수 사용 예시
+due = datetime.datetime(2018,5,13,15,27,4,10000)
+export = datetime.datetime(2018,5,12,15,27,4,10000)
+level = {'Voice comms':3}
+register_material('51232323','12333',due,export,level,'')
 '''

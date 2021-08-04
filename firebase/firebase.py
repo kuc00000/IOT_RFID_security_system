@@ -8,14 +8,14 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-def register_material(material_id, uid, name, due_date, security_level, salt):
+def register_material(material_id, name, due_date, security_level, salt):
     doc_ref = db.collection("Material").document(material_id)
-    doc_ref.set({'uid': uid, 'name': name, 'due_date': due_date, 'security_level': security_level, 'salt': salt})
+    doc_ref.set({'name': name, 'due_date': due_date, 'security_level': security_level, 'salt': salt})
 
 
-def register_user(id, uid, name, password, entry_time, exit_time, salt):
-    doc_ref = db.collection("User").document(id)
-    doc_ref.set({'uid': uid, 'name': name, 'password': password, 'entry_time': entry_time, 'exit_time': exit_time, 'salt': salt})
+def register_user(user_id, name, password, entry_time, exit_time, salt):
+    doc_ref = db.collection("User").document(user_id)
+    doc_ref.set({'name': name, 'password': password, 'entry_time': entry_time, 'exit_time': exit_time, 'salt': salt})
 
 
 def find_doc(coll_name, doc_name):
@@ -63,11 +63,11 @@ def find_doc_with_np(name, password):
     return False
 
 
-def find_doc_with_uid(coll_name, uid):
-    docs = db.collection(coll_name).stream()
+def get_salt_list():
+    salt_list = []
+    docs = db.collection("Salt").stream()
     for doc in docs:
         if doc.exists:
-            if doc.get("uid") == uid:
-                return doc.id
-    return False
+            salt_list.append(doc.get("salt"))
+    return salt_list
 

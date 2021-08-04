@@ -8,6 +8,16 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
+def register_material(material_id, uid, name, due_date, security_level, salt):
+    doc_ref = db.collection("Material").document(material_id)
+    doc_ref.set({'uid': uid, 'name': name, 'due_date': due_date, 'security_level': security_level, 'salt': salt})
+
+
+def register_user(id, uid, name, password, entry_time, exit_time, salt):
+    doc_ref = db.collection("User").document(id)
+    doc_ref.set({'uid': uid, 'name': name, 'password': password, 'entry_time': entry_time, 'exit_time': exit_time, 'salt': salt})
+
+
 def find_doc(coll_name, doc_name):
     doc_ref = db.collection(coll_name).document(doc_name)
     doc = doc_ref.get()
@@ -24,16 +34,6 @@ def delete_doc(coll_name, doc_name):
         doc_ref.delete()
     else:
         print("Error")
-
-
-def register_material(material_id, _user_id, _due_date, _security_level):
-    doc_ref = db.collection("Material").document(material_id)
-    doc_ref.set({'user_id': _user_id, 'due_date': _due_date, 'security_level': _security_level})
-
-
-def register_user(_user_id, _user_name, _password, _entry_time, _exit_time):
-    doc_ref = db.collection("User").document(_user_id)
-    doc_ref.set({'user_name': _user_name, 'password': _password, 'entry_time': _entry_time, 'exit_time': _exit_time})
 
 
 def get_field(coll_name, doc_name, field_name):
@@ -54,11 +54,20 @@ def set_field(coll_name, doc_name, field_name, value):
         print("Error")
 
 
-def find_doc_with_np(user_name, password):
+def find_doc_with_np(name, password):
     docs = db.collection("User").stream()
     for doc in docs:
         if doc.exists:
-            if doc.get("user_name") == user_name and doc.get("password") == password:
+            if doc.get("name") == name and doc.get("password") == password:
+                return doc.id
+    return False
+
+
+def find_doc_with_uid(coll_name, uid):
+    docs = db.collection(coll_name).stream()
+    for doc in docs:
+        if doc.exists:
+            if doc.get("uid") == uid:
                 return doc.id
     return False
 

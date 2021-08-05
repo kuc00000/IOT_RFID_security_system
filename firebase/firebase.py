@@ -8,14 +8,14 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-def register_material(material_id, name, due_date, security_level, salt):
-    doc_ref = db.collection("Material").document(material_id)
-    doc_ref.set({'name': name, 'due_date': due_date, 'security_level': security_level, 'salt': salt})
+def register_material(material_id, name, due_date, security_level):
+    doc_ref = db.collection("Material_" + str(security_level)).document(material_id)
+    doc_ref.set({'name': name, 'due_date': due_date, 'security_level': security_level})
 
 
-def register_user(user_id, name, password, entry_time, exit_time, salt):
+def register_user(user_id, name, password, entry_time, exit_time):
     doc_ref = db.collection("User").document(user_id)
-    doc_ref.set({'name': name, 'password': password, 'entry_time': entry_time, 'exit_time': exit_time, 'salt': salt})
+    doc_ref.set({'name': name, 'password': password, 'entry_time': entry_time, 'exit_time': exit_time})
 
 
 def find_doc(coll_name, doc_name):

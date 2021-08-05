@@ -1,39 +1,8 @@
 from firebase import firebase as f
 from hash import hash as h
-import sys
-import msvcrt
+from secret import secret as s
 import datetime
 import random
-
-
-def get_secret(message=None) -> str:
-    if message is not None:
-        sys.stdout.write(message)
-        sys.stdout.flush()
-    buf = bytearray()
-    skip = False
-    while True:
-        if not msvcrt.kbhit():
-            continue
-        x = msvcrt.getch()
-        if x.startswith(b"\xe0") or x.startswith(b"\x00"):
-            skip = True
-            continue
-        if skip:
-            skip = False
-            continue
-        t = int.from_bytes(x, sys.byteorder)
-        if t == 13:
-            msvcrt.putch('\n'.encode())
-            return buf.decode()
-        elif t == 8:
-            if buf:
-                sys.stdout.write("\b \b")
-                sys.stdout.flush()
-                buf.pop()
-        elif 32 <= t < 126:
-            msvcrt.putch('*'.encode())
-            buf.append(t)
 
 
 while True:
@@ -54,15 +23,16 @@ while True:
             if n == "0":
                 break
             elif n == "1":
-                _uid = get_secret()
+                _uid = s.get_secret()
                 print("Security level = " + str((int(_uid) % 4 + 1)))
             elif n == "2":
-                _uid = get_secret()
+                _uid = s.get_secret()
+                _level = int(_uid) % 4 + 1
                 salt_list = f.get_salt_list()
                 check = False
                 for _salt in salt_list:
                     h_uid = h.hash_function(_uid, _salt)
-                    if f.find_doc("Material", h_uid):
+                    if f.find_doc("Material_" + str(_level), h_uid):
                         print("Error - id already exists in DB.")
                         check = True
                         break
@@ -74,16 +44,17 @@ while True:
                 _level = int(_uid) % 4 + 1
                 _uid = h.hash_function(_uid, salt)
                 _name = h.hash_function(_name, salt)
-                f.register_material(_uid, _name,  (datetime.datetime.now() + datetime.timedelta(7, 0, 0, 0)).replace(tzinfo=None), _level, salt)
+                f.register_material(_uid, _name,  (datetime.datetime.now() + datetime.timedelta(7, 0, 0, 0)).replace(tzinfo=None), _level)
                 print("Success to register.")
             elif n == "3":
-                _uid = get_secret()
+                _uid = s.get_secret()
+                _level = int(_uid) % 4 + 1
                 salt = ""
                 salt_list = f.get_salt_list()
                 check = False
                 for _salt in salt_list:
                     h_uid = h.hash_function(_uid, _salt)
-                    if f.find_doc("Material", h_uid):
+                    if f.find_doc("Material_" + str(_level), h_uid):
                         salt = _salt
                         check = True
                         break
@@ -93,25 +64,26 @@ while True:
                     print("Warning - uid doesn't exist in DB.")
                     continue
                 _uid = h.hash_function(_uid, salt)
-                _due = f.get_field("Material", _uid, "due_date")
+                _due = f.get_field("Material_" + str(_level), _uid, "due_date")
                 _due = _due.replace(tzinfo=None)
                 if datetime.datetime.now() >= _due:
                     print("Warning - due date was over, please return it.")
             elif n == "4":
-                _uid = get_secret()
+                _uid = s.get_secret()
+                _level = int(_uid) % 4 + 1
                 salt = ""
                 salt_list = f.get_salt_list()
                 check = False
                 for _salt in salt_list:
                     h_uid = h.hash_function(_uid, _salt)
-                    if f.find_doc("Material", h_uid):
+                    if f.find_doc("Material_" + str(_level), h_uid):
                         salt = _salt
                         check = True
                         break
                 if check:
                     _uid = h.hash_function(_uid, salt)
-                    _due = f.get_field("Material", _uid, "due_date")
-                    f.delete_doc("Material", _uid)
+                    _due = f.get_field("Material_" + str(_level), _uid, "due_date")
+                    f.delete_doc("Material_" + str(_level), _uid)
                     print("Success to return.")
                     print("Due date : " + str(_due))
                     print("Export time : " + str(datetime.datetime.now().replace(tzinfo=None)))
@@ -131,7 +103,7 @@ while True:
             if n == "0":
                 break
             elif n == "1":
-                _uid = get_secret()
+                _uid = s.get_secret()
                 salt_list = f.get_salt_list()
                 check = False
                 for _salt in salt_list:
@@ -143,16 +115,16 @@ while True:
                 if check:
                     continue
                 _name = input("Name = ")
-                _password = get_secret("Password = ")
+                _password = s.get_secret("Password = ")
                 idx = random.randint(0, len(salt_list) - 1)
                 salt = salt_list[idx]
                 _uid = h.hash_function(_uid, salt)
                 _name = h.hash_function(_name, salt)
                 _password = h.hash_function(_password, salt)
-                f.register_user(_uid, _name, _password, None, None, salt)
+                f.register_user(_uid, _name, _password, None, None)
                 print("Success to register.")
             elif n == "2":
-                _uid = get_secret()
+                _uid = s.get_secret()
                 salt = ""
                 salt_list = f.get_salt_list()
                 check = False
@@ -180,7 +152,7 @@ while True:
                     print("Check-in")
             elif n == "3":
                 _name = input("Name = ")
-                _password = get_secret("Password = ")
+                _password = s.get_secret("Password = ")
                 h_uid = ""
                 salt = ""
                 salt_list = f.get_salt_list()
@@ -199,7 +171,7 @@ while True:
                 else:
                     print("Error - corresponding information doesn't exist.")
             elif n == "4":
-                _uid = get_secret()
+                _uid = s.get_secret()
                 salt = ""
                 salt_list = f.get_salt_list()
                 check = False
@@ -216,7 +188,7 @@ while True:
                 else:
                     print("Error - uid doesn't exist in DB.")
             elif n == "5":
-                _uid = get_secret()
+                _uid = s.get_secret()
                 salt = ""
                 salt_list = f.get_salt_list()
                 check = False

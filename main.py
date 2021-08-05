@@ -41,7 +41,6 @@ while True:
                 _name = input("Name = ")
                 idx = random.randint(0, len(salt_list) - 1)
                 salt = salt_list[idx]
-                _level = int(_uid) % 4 + 1
                 _uid = h.hash_function(_uid, salt)
                 _name = h.hash_function(_name, salt)
                 f.register_material(_uid, _name,  (datetime.datetime.now() + datetime.timedelta(7, 0, 0, 0)).replace(tzinfo=None), _level)

@@ -2,7 +2,7 @@ import hashlib
 
 
 def hash_function(string, salt):
-    hash_ = hashlib.sha256()
+    hash_ = hashlib.sha3_256()
     string = string + salt
     string = string.encode('utf-8')
     hash_.update(string)

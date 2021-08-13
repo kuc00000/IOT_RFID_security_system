@@ -36,3 +36,60 @@ _It has the following advantages:_
 - Through the time information stored when people pass the system, tracing the movement becomes effective.
 
 -----
+
+### ■&nbsp;&nbsp;Project Implementation
+#### 1. Environment setting
+- The system is implemented with Python, and utilizes Google Cloud Firestore.
+- There should be a JSON file contatining the key to access to the Firebase.
+- Libraries including firebase-admin 5.0.1.
+- MF RFID readers and MF 13.56Mhz RFID tags are used for the project.
+
+#### 2. Process of the project
+- The system works through this process when UID is entered.
+
+![image](https://user-images.githubusercontent.com/51505940/129314352-8a7bb782-c56f-461b-8509-400ef4f3ce65.png)
+
+- The information is protected using SHA3-256 with salt. And Each UID has different salt value.
+
+#### 3. User management
+- When UID is entered, system checks if user has permission, and records entry-time, exit-time.
+- If user loses his or her card, he or she can report the loss by entering the name and password.
+- DB schema for user
+
+|  UID  |  Entry_time  |  Exit_time  |  Name  |  Password  |
+| ----- | ------------ | ----------- | ------ | ---------- |
+| UID-1 | Entry_time-1 | Exit_time-1 | Name-1 | Password-1 |
+| UID-2 | Entry_time-2 | Exit_time-2 | Name-2 | Password-2 |
+|  ...  |      ...     |     ...     |  ...   |    ...     |
+| UID-n | Entry_time-n | Exit_time-n | Name-n | Password-n |
+
+#### 4. Material management
+- When UID is entered, system checks if UID is already registered, and checks the due-date.
+- Security level of the RFID tag is calculated with `UID value mod 4 + 1`.
+- The security level division can reduce the amount of computation in the Database.
+- Security level of material
+
+|  Level  |  Type of material                         |
+| ------- | ----------------------------------------- |
+|    1    |  Radio communication available equipment  |
+|    2    |  Recording available equipment            |
+|    3    |  Storage device                           |
+|    4    |  Confidential document                    |
+
+- DB schema for material
+
+|  UID  |  Name  |  Security_level  |  Due_date  |
+| ----- | ------ | ---------------- | ---------- |
+| UID-1 | Name-1 | Security_level-1 | Due_date-1 |
+| UID-2 | Name-2 | Security_level-2 | Due_date-2 |
+|  ...  |  ...   |       ...        |    ...     |
+| UID-n | Name-n | Security_level-n | Due_date-n |
+
+#### 5. Test
+- Test for user
+
+![image](https://user-images.githubusercontent.com/51505940/129316283-7c9222f3-7de4-4895-80e8-5767c179a6e0.png)
+
+- Test for material
+
+![image](https://user-images.githubusercontent.com/51505940/129316309-7bb18fcd-d813-4625-bc16-ddc48fdff889.png)

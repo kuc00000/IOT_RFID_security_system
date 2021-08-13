@@ -47,7 +47,7 @@ _It has the following advantages:_
 #### 2. Process of the project
 - The system works through this process when UID is entered.
 
-![image](https://user-images.githubusercontent.com/51505940/129314352-8a7bb782-c56f-461b-8509-400ef4f3ce65.png)
+![image](https://user-images.githubusercontent.com/51505940/129325758-d76aa13d-48b6-488e-ab13-6f62ad887321.png)
 
 - The information is protected using SHA3-256 with salt. And Each UID has different salt value.
 

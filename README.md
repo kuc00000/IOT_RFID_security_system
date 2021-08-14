@@ -1,6 +1,8 @@
 # IITP Summer Program 2021
 
-## PROJECT 11 : Enhancing IoT Access Control System Based on RFID
+## PROJECT 11
+### Enhancing the physical security system of the company's access control using RFID<br>
+#### \- Dividing into two aspects: Human and equipment access control
 
 -----
 
@@ -37,12 +39,19 @@ _It has the following advantages:_
 
 -----
 
+### ■&nbsp;&nbsp;Project Differentiation
+- In this project, RFID systems were used to design an access control system that considered both human and physical security.
+- This access control system protected information through hash algorithms. Also, the salting technique was applied when generating hash values to prevent vulnerabilities in existing hash functions such as Brute Force and Rainbow table attack.
+- In addition, security levels were applied to classify assets so that registered assets could be managed more efficiently.
+
+-----
+
 ### ■&nbsp;&nbsp;Project Implementation
 #### 1. Environment setting
 - The system is implemented with Python, and utilizes Google Cloud Firestore.
 - There should be a JSON file contatining the key to access to the Firebase.
 - Libraries including firebase-admin 5.0.1.
-- MF RFID readers and MF 13.56Mhz RFID tags are used for the project.
+- MF RFID readers and MF 13.56MHz RFID tags are used for the project.
 
 #### 2. Process of the project
 - The system works through this process when UID is entered.

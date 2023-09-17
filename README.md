@@ -9,19 +9,19 @@
 ### ■&nbsp;&nbsp;TEAM MEMBERS
 | NAME           | University           |
 | -------------- | -------------------- |
-| Cheongjun Kim  | Chung-Ang University |
-| Jaehyun Shin   | Chung-Ang University |
-| Myoungjin Oh   | Chung-Ang University |
-| Sangyeop Park  | Chung-Ang University |
-| Seunghyeon Lee | Chung-Ang University |
-| Uichan Kim     | Chung-Ang University |
-| Zhongyuan Hu   | Purdue University    |
+| OOO  | OO University |
+| OO   | OO University |
+| OO  | OO University |
+| OO  | OO University |
+| OO | OO University |
+| OO     | OO University |
+| OOO   | OOO University    |
 
 -----
 
 ### ■&nbsp;&nbsp;Project Introduction
-▣ The project is part of the IITP Summer Program, and **Korean universities & Purdue university** participated together.<br>
-▣ The members consist of 6 **Chung-Ang University** students and 1 **Purdue University** student.<br>
+▣ The project is part of the IITP Summer Program, and **OO universities & OO university** participated together.<br>
+▣ The members consist of 6 **oOUniversity** students and 1 **OO University** student.<br>
 ▣ This project's goal is to improve physical security with **RFID systems** and ensure that assets can be managed safely and efficiently.<br>
 <br>
 _It has the following advantages:_
